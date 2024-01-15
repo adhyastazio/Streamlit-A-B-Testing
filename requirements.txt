@@ -1,6 +1,6 @@
-streamlit
-pandas
-matplotlib
+streamlit==1.29.0
+pandas==
+matplotlib==3.8.1
 seaborn
-scipy
-openpyxl
+scipy==1.11.1
+openpyxl==3.0.10
