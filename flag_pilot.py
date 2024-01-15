@@ -127,7 +127,7 @@ def mitra_limit(df_filtered, show_labels=True):
         
     ax.set_xlabel('FLAG_PILOT')
     ax.set_ylabel('Number of Events')
-    ax.set_title('Sum of Initiate Mitra and Limit Approved')
+    #ax.set_title('Sum of Initiate Mitra and Limit Approved')
     ax.set_xticks([i + bar_width/2 for i in index])
     ax.set_xticklabels(sum_df['FLAG_PILOT'])
     ax.legend()
