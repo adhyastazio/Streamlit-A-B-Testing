@@ -27,7 +27,6 @@ selected_code_risk = st.sidebar.multiselect('Code Risk', all_code_risk, default=
 start_date = st.sidebar.date_input('Start Date', df_filtered['DATE_0BOD'].min())
 end_date = st.sidebar.date_input('End Date', df_filtered['DATE_0BOD'].max())
 
-# Apply date filter
 day_df = df_filtered[(df_filtered['DATE_0BOD'].dt.date >= start_date) & (df_filtered['DATE_0BOD'].dt.date <= end_date)]
 
 if selected_flag_pilot == 'All':
@@ -67,9 +66,6 @@ def main():
     ttest_pilot(day_df_2)
 
     
-
-# Plotting Functions
-
 def plot_risk_vs_limit(df, show_labels=True):
     df_pivot = df.pivot_table(index='DATE_0BOD', columns='CODE_RISK', values='LIMIT_APPROVED', aggfunc='sum', fill_value=0)
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -218,16 +214,12 @@ def flag_pilot(df, show_labels=True):
     df_grouped['AOL'] = (df_grouped['SUBMIT_2BOD'] / df_grouped['LIMIT_APPROVED'] * 100).round(2)
     df_grouped['Contract/Limit'] = (df_grouped['SIGNED_CONTRACT'] / df_grouped['LIMIT_APPROVED'] * 100).round(2)
     
-    # Resetting the index to make 'FLAG_PILOT' a regular column
     df_grouped.reset_index(inplace=True)
     
-    # Selecting relevant columns including 'FLAG_PILOT'
     dfx = df_grouped[['FLAG_PILOT', 'Visit POS/Limit', 'AOL', 'Contract/Limit']]
     
-    # Using melt with 'FLAG_PILOT' as id_vars
     df_melt = pd.melt(dfx, id_vars='FLAG_PILOT', var_name='Metrics', value_name='Values')
     
-    # Plotting the bar chart
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.barplot(x='Metrics', y='Values', hue='FLAG_PILOT', data=df_melt)
     
@@ -254,17 +246,14 @@ def ttest_pilot(df):
     control_group = df2[df2['FLAG_PILOT'] == 'Control']['ratio']
     pilot_group = df2[df2['FLAG_PILOT'] == 'Hide Limit Pilot']['ratio']
     
-    # Plotting the bar chart
     fig, ax = plt.subplots(figsize=(8, 6))
     sns.barplot(x=['Control', 'Hide Limit Pilot'], y=[control_group.mean(), pilot_group.mean()], ax=ax)
     ax.set_ylabel('Average Ratio')
     #   ax.set_title('Average Ratio Comparison between Control and Hide Limit Pilot')
     
-    # Adding error bars for standard error of the mean
     plt.errorbar(x=['Control', 'Hide Limit Pilot'], y=[control_group.mean(), pilot_group.mean()],
                  yerr=[control_group.sem(), pilot_group.sem()], fmt='o', color='black', capsize=5)
     
-    # Performing t-test
     t_statistic, p_value = ttest_ind(control_group, pilot_group)
     alpha = 0.05
     p_value_r = round(p_value, 3)
